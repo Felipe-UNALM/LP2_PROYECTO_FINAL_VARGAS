@@ -1,20 +1,15 @@
 import subprocess
 import database
-import convertidor  # <- Añade esta importación
+import convertidor
 
 def ejecutar_pipeline():
-    print("🚀 Iniciando extracción...")
+    print("--- 🚀 Iniciando Sistema ---")
     subprocess.run(["python", "scraper_fuente1.py"])
     subprocess.run(["python", "scraper_fuente2.py"])
-    
-    print("🚀 Convirtiendo datos a formato compatible...")
-    convertidor.convertir_json_a_csv() # <- Nueva línea
-    
-    print("🚀 Cargando a Base de Datos...")
+    convertidor.convertir_json_a_csv()
     database.crear_base_de_datos()
     database.integrar_csv_a_sqlite()
-    
-    print("✅ Pipeline completado. Lanzando Dashboard...")
+    print("--- ✅ Pipeline completo. Iniciando Dashboard ---")
     subprocess.run(["python", "-m", "streamlit", "run", "app.py"])
 
 if __name__ == "__main__":
