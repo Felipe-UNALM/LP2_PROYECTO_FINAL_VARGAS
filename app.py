@@ -3,17 +3,18 @@ import pandas as pd
 import plotly.express as px
 import sqlite3
 
-# Configuración estética de la ventana web
+# Configuración de la interfaz gráfica del Dashboard
 st.set_page_config(page_title="Monitor de Desinformación", page_icon="📊", layout="wide")
 
 DB_NAME = "monitor_desinformacion.db"
 
+# Cabecera principal del entorno web
 st.title("📊 Monitor de Desinformación Científica en Salud")
-st.markdown("**Fase 3: Visualización de Resultados e Interfaz Analítica (Rol: Isaac)**")
-st.text("Proyecto Final - Visualización de Datos desde Motor SQLite Embebido")
-st.divider()  # <-- CORREGIDO AQUÍ
+st.markdown("**Panel Analítico Interactiva de Control Sanitario**")
+st.text("Visualización en tiempo real desde el motor relacional SQLite")
+st.divider()
 
-# REQUISITO EXIGIDO: Consumir la data directamente de la Base de Datos SQLite
+# Extracción y lectura de datos desde SQLite
 try:
     conn = sqlite3.connect(DB_NAME)
     df = pd.read_sql_query("SELECT * FROM articulos", conn)
@@ -22,10 +23,11 @@ except Exception as e:
     st.error(f"❌ Error de conexión a la base de datos: {e}")
     df = pd.DataFrame()
 
+# Validación de consistencia de datos antes de renderizar componentes
 if df.empty:
-    st.warning("⚠️ La base de datos SQLite está vacía o no ha sido inicializada. Ejecuta 'python database.py' primero.")
+    st.warning("⚠️ La base de datos SQLite está vacía o no ha sido inicializada. Ejecute 'database.py' primero.")
 else:
-    # 📈 Sección de Métricas Clave (KPIs)
+    # Bloque de Métricas Clave de Control (KPIs)
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric(label="Total Artículos Auditados", value=len(df))
@@ -35,9 +37,9 @@ else:
     with col3:
         st.metric(label="Promedio de Riesgo Global (IRD)", value=round(df["puntaje_ird"].mean(), 2))
         
-    st.divider()  # <-- CORREGIDO AQUÍ
+    st.divider()
     
-    # 📊 Gráficos Estadísticos con Plotly
+    # Renderizado de gráficos estadísticos mediante Plotly Express
     col_izq, col_der = st.columns(2)
     with col_izq:
         st.subheader("📈 Índice de Riesgo (IRD) por Publicación")
@@ -58,8 +60,8 @@ else:
         )
         st.plotly_chart(fig_pie, use_container_width=True)
         
-    st.divider()  # <-- CORREGIDO AQUÍ
+    st.divider()
     
-    # 🗄️ Tabla Relacional desde SQLite
+    # Visualización de la matriz de datos con formato condicional semafórico
     st.subheader("🗄️ Datos Extraídos del Motor Relacional Local (`monitor_desinformacion.db`)")
     st.dataframe(df.style.background_gradient(cmap="YlOrRd", subset=["puntaje_ird"]), use_container_width=True)
