@@ -12,15 +12,12 @@ Este repositorio contiene el código funcional y la arquitectura modular del **M
 ---
 
 ## 🛠️ Arquitectura Modular del Sistema
+El proyecto se diseñó bajo una arquitectura desacoplada en 4 capas para garantizar la integridad, trazabilidad y consistencia de los datos analizados:
 
-El proyecto se diseñó bajo una arquitectura desacoplada en 5 capas consecutivas (Pipeline Secuencial de Datos):
-
-1. **Capa Ética (`robots_checker.py`):** Consulta nativa mediante `urllib.robotparser` para verificar las directivas del archivo `robots.txt` de cada web antes de iniciar la extracción.
-2. **Capa de Extracción (`scraper_fuente1.py` / `scraper_fuente2.py`):** Consumo de URLs por lotes mediante peticiones concurrentes con la librería `requests` y parseo del árbol HTML con `BeautifulSoup`.
-3. **Capa de Normalización y Orquestación (`limpieza.py`):** Script central que limpia el texto (remoción de etiquetas, caracteres especiales y normalización de minúsculas) y coordina el flujo de los datos.
-4. **Capa Analítica (`regex_patterns.py` y `score_ird.py`):** Motor de cálculo del Índice IRD. Aplica penalizaciones estrictas mediante Expresiones Regulares: un peso macro de **+3.0** por cada interacción/enlace de propagación externo y un peso micro acumulativo de **+0.1** por densidad lingüística de términos alarmistas.
-5. **Capa de Persistencia Relacional y UI (`database.py` & `app.py`):** Almacenamiento indexado en una base de datos relacional SQLite mediante inyección SQL, la cual sirve de fuente directa para el Dashboard interactivo desarrollado en **Streamlit** con gráficos dinámicos de **Plotly**.
-
+1. **Capa de Extracción:** Implementación de *scrapers* autónomos para la recolección de datos desde fuentes institucionales (MedlinePlus) y plataformas de agregación social (Menéame).
+2. **Capa de Procesamiento (`convertidor.py`):** Componente encargado de la normalización, limpieza de texto, cálculo del **Índice de Riesgo de Desinformación (IRD)** y estructuración de la muestra de auditoría controlada (5 artículos).
+3. **Capa de Persistencia (`database.py`):** Gestión de almacenamiento mediante una base de datos relacional **SQLite**, que actúa como fuente única de verdad para la coherencia entre el análisis de riesgos y la visualización.
+4. **Capa de Visualización (`app.py`):** Dashboard interactivo desarrollado con **Streamlit** y **Plotly**, que permite la identificación visual inmediata de alertas críticas y la navegación por el dataset auditado.
 ---
 
 ## 🚀 Guía de Instalación y Ejecución Paso a Paso
@@ -39,12 +36,12 @@ cd LP2_PROYECTO_FINAL_VARGAS
 pip install -r requirements.txt
 ```
 
-### Paso 3: Ejecutar pipeline de procesamiento
+### Paso 3: Ejecutar pipeline de procesamiento y base de datos
 ```bash
-python limpieza.py
+python main.py
 ```
 
-### Paso 4: Iniciar la aplicación
+### Paso 4: Iniciar la interfaz del Dashboard
 ```bash
 streamlit run app.py
 ```
