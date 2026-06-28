@@ -36,13 +36,8 @@ cd LP2_PROYECTO_FINAL_VARGAS
 pip install -r requirements.txt
 ```
 
-### Paso 3: Ejecutar pipeline de procesamiento y base de datos
+### Paso 3: Muestra el sistema completo
 ```bash
 python main.py
-```
-
-### Paso 4: Iniciar la interfaz del Dashboard
-```bash
-streamlit run app.py
 ```
 
